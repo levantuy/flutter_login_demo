@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Column(
+            content: SingleChildScrollView(child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                   ))
                 ])
               ],
-            ),
+            )),
             actions: <Widget>[
               new FlatButton(
                   child: const Text('Cancel'),
@@ -223,7 +223,8 @@ class _HomePageState extends State<HomePage> {
               new FlatButton(
                   child: const Text('Save'),
                   onPressed: () {
-                    addNewTodo(_textEditingController.text.toString(), _payDateEditingController.text.toString());
+                    addNewTodo(_textEditingController.text.toString(),
+                        _payDateEditingController.text.toString());
                     Navigator.pop(context);
                   })
             ],
