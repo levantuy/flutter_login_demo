@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final _textEditingController = TextEditingController();
+  final _payDateEditingController = TextEditingController();
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
 
@@ -141,9 +142,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  addNewTodo(String todoItem) {
+  addNewTodo(String todoItem, String payDate) {
     if (todoItem.length > 0) {
-      Todo todo = new Todo(todoItem.toString(), widget.userId, false);
+      Todo todo = new Todo(todoItem.toString(), widget.userId, false, payDate.toString());
       _database.reference().child("todo").push().set(todo.toJson());
     }
   }
@@ -180,7 +181,13 @@ class _HomePageState extends State<HomePage> {
                   decoration: new InputDecoration(
                     labelText: 'Add new todo',
                   ),
-                ))
+                )),
+                Expanded(
+                  child: new TextField(controller: _payDateEditingController,
+                    decoration: new InputDecoration(
+                      labelText: 'Pay date',
+                    ),),
+                ),
               ],
             ),
             actions: <Widget>[
@@ -192,7 +199,7 @@ class _HomePageState extends State<HomePage> {
               new FlatButton(
                   child: const Text('Save'),
                   onPressed: () {
-                    addNewTodo(_textEditingController.text.toString());
+                    addNewTodo(_textEditingController.text.toString(), _payDateEditingController.text.toString());
                     Navigator.pop(context);
                   })
             ],
