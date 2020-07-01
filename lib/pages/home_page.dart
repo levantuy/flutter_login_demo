@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
 
   final _textEditingController = TextEditingController();
   final _payDateEditingController = TextEditingController();
+  final _money = TextEditingController();
   DateTime selectedDate = DateTime.now();
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
@@ -144,9 +145,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  addNewTodo(String todoItem, DateTime payDate) {
+  addNewTodo(String todoItem, DateTime payDate, int money) {
     if (todoItem.length > 0) {
-      Todo todo = new Todo(todoItem.toString(), widget.userId, false, payDate);
+      Todo todo = new Todo(todoItem.toString(), widget.userId, false, payDate, money);
       _database.reference().child("todo").push().set(todo.toJson());
     }
   }
@@ -171,6 +172,7 @@ class _HomePageState extends State<HomePage> {
   showAddTodoDialog(BuildContext context) async {
     _textEditingController.clear();
     _payDateEditingController.clear();
+    _money.clear();
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -191,6 +193,17 @@ class _HomePageState extends State<HomePage> {
                       hintText: "Ex. buy rice",
                     ),
                   ))
+                ]),Row(children: [
+                  new Expanded(
+                      child: new TextFormField(
+                        maxLengthEnforced: false,
+                        maxLines: null,
+                        controller: _money,
+                        decoration: InputDecoration(
+                          labelText: "Money",
+                          hintText: "Ex. 6800",
+                        ),
+                      ))
                 ]),
                 Row(children: [
                   new Expanded(
@@ -225,7 +238,7 @@ class _HomePageState extends State<HomePage> {
               new FlatButton(
                   child: const Text('Save'),
                   onPressed: () {
-                    addNewTodo(_textEditingController.text.toString(), selectedDate);
+                    addNewTodo(_textEditingController.text.toString(), selectedDate, int.parse(_money.text.toString()));
                     Navigator.pop(context);
                   })
             ],
