@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
@@ -198,6 +199,10 @@ class _HomePageState extends State<HomePage> {
                       child: new TextField(
                         maxLengthEnforced: false,
                         maxLines: null,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ], // Only numbers can be entered
                         controller: _money,
                         decoration: InputDecoration(
                           labelText: "Money",
