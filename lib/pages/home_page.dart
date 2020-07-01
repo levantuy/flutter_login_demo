@@ -260,7 +260,7 @@ class _HomePageState extends State<HomePage> {
             String subject = _todoList[index].subject;
             bool completed = _todoList[index].completed;
             String userId = _todoList[index].userId;
-            var paydateFormat = DateFormat.yMMMd().format(_todoList[index].payDate) + " - " + DateFormat.Hm().format(_todoList[index].payDate); // Apr 8, 2020
+            var paydateFormat = DateFormat.yMMMd().format(_todoList[index].payDate) + " - " + _todoList[index].money.toString(); // Apr 8, 2020 - 6800
             return Dismissible(
               key: Key(todoId),
               background: Container(color: Colors.red),
