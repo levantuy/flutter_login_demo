@@ -168,6 +168,7 @@ class _HomePageState extends State<HomePage> {
 
   showAddTodoDialog(BuildContext context) async {
     _textEditingController.clear();
+    _payDateEditingController.clear();
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -182,12 +183,24 @@ class _HomePageState extends State<HomePage> {
                     labelText: 'Add new todo',
                   ),
                 )),
-                Expanded(
-                  child: new TextField(controller: _payDateEditingController,
-                    decoration: new InputDecoration(
-                      labelText: 'Pay date',
-                    ),),
-                ),
+                new Expanded(
+                    child: new TextFormField(
+                  controller: _payDateEditingController,
+                  decoration: InputDecoration(
+                    labelText: "Date of birth",
+                    hintText: "Ex. Insert your dob",
+                  ),
+                  onTap: () async {
+                    DateTime date = DateTime(1900);
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                    date = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100));
+                    _payDateEditingController.text = date.toIso8601String();
+                  },
+                ))
               ],
             ),
             actions: <Widget>[
