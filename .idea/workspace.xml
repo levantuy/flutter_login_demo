@@ -8,7 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/pages/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/home_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +18,9 @@
     <option name="isMigrated" value="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CB512C1XTW" />
+  <component name="FavoritesManager">
+    <favorites_list name="flutter_login_demo" />
+  </component>
   <component name="FindInProjectRecents">
     <findStrings>
       <find>Clip</find>
@@ -116,6 +118,30 @@
       <screen x="62" y="0" width="1858" height="1080" />
     </state>
     <state x="583" y="198" key="#Notifications/62.0.1858.1080@62.0.1858.1080" timestamp="1593575356745" />
+    <state x="846" y="305" key="AndroidProcessChooserDialog" timestamp="1593592778042">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="846" y="305" key="AndroidProcessChooserDialog/62.0.1858.1080@62.0.1858.1080" timestamp="1593592778042" />
+    <state width="1815" height="253" key="GridCell.Tab.0.bottom" timestamp="1593592745036">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="253" key="GridCell.Tab.0.bottom/62.0.1858.1080@62.0.1858.1080" timestamp="1593592745036" />
+    <state width="1815" height="253" key="GridCell.Tab.0.center" timestamp="1593592745036">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="253" key="GridCell.Tab.0.center/62.0.1858.1080@62.0.1858.1080" timestamp="1593592745036" />
+    <state width="1815" height="253" key="GridCell.Tab.0.left" timestamp="1593592745036">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="253" key="GridCell.Tab.0.left/62.0.1858.1080@62.0.1858.1080" timestamp="1593592745036" />
+    <state width="1815" height="253" key="GridCell.Tab.0.right" timestamp="1593592745036">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state width="1815" height="253" key="GridCell.Tab.0.right/62.0.1858.1080@62.0.1858.1080" timestamp="1593592745036" />
+    <state x="492" y="182" key="SettingsEditor" timestamp="1593592891002">
+      <screen x="62" y="0" width="1858" height="1080" />
+    </state>
+    <state x="492" y="182" key="SettingsEditor/62.0.1858.1080@62.0.1858.1080" timestamp="1593592891002" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

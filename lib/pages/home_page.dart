@@ -173,34 +173,45 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: new Row(
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                new Expanded(
-                    child: new TextField(
-                  controller: _textEditingController,
-                  autofocus: true,
-                  decoration: new InputDecoration(
-                    labelText: 'Add new todo',
-                  ),
-                )),
-                new Expanded(
-                    child: new TextFormField(
-                  controller: _payDateEditingController,
-                  decoration: InputDecoration(
-                    labelText: "Date of birth",
-                    hintText: "Ex. Insert your dob",
-                  ),
-                  onTap: () async {
-                    DateTime date = DateTime(1900);
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                    date = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime(2100));
-                    _payDateEditingController.text = date.toIso8601String();
-                  },
-                ))
+                Row(children: [
+                  new Expanded(
+                      child: new TextField(
+                    maxLengthEnforced: false,
+                    maxLines: null,
+                    controller: _textEditingController,
+                    autofocus: true,
+                    decoration: new InputDecoration(
+                      labelText: 'Title',
+                      hintText: "Ex. buy rice",
+                    ),
+                  ))
+                ]),
+                Row(children: [
+                  new Expanded(
+                      child: new TextFormField(
+                    maxLengthEnforced: false,
+                    maxLines: null,
+                    controller: _payDateEditingController,
+                    decoration: InputDecoration(
+                      labelText: "Date of birth",
+                      hintText: "Ex. 2020/06/01",
+                    ),
+                    onTap: () async {
+                      DateTime date = DateTime(1900);
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime(2100));
+                      _payDateEditingController.text = date.toIso8601String();
+                    },
+                  ))
+                ])
               ],
             ),
             actions: <Widget>[
