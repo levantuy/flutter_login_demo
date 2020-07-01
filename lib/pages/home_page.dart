@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                   ))
                 ]),Row(children: [
                   new Expanded(
-                      child: new TextFormField(
+                      child: new TextField(
                         maxLengthEnforced: false,
                         maxLines: null,
                         controller: _money,
@@ -204,10 +204,9 @@ class _HomePageState extends State<HomePage> {
                           hintText: "Ex. 6800",
                         ),
                       ))
-                ]),
-                Row(children: [
+                ]), Row(children: [
                   new Expanded(
-                      child: new TextFormField(
+                      child: new TextField(
                     maxLengthEnforced: false,
                     maxLines: null,
                     controller: _payDateEditingController,
