@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
 
   final _textEditingController = TextEditingController();
   final _payDateEditingController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
 
@@ -142,9 +144,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  addNewTodo(String todoItem, String payDate) {
+  addNewTodo(String todoItem, DateTime payDate) {
     if (todoItem.length > 0) {
-      Todo todo = new Todo(todoItem.toString(), widget.userId, false, payDate.toString());
+      Todo todo = new Todo(todoItem.toString(), widget.userId, false, payDate);
       _database.reference().child("todo").push().set(todo.toJson());
     }
   }
@@ -197,18 +199,18 @@ class _HomePageState extends State<HomePage> {
                     maxLines: null,
                     controller: _payDateEditingController,
                     decoration: InputDecoration(
-                      labelText: "Date of birth",
+                      labelText: "Pay date",
                       hintText: "Ex. 2020/06/01",
                     ),
                     onTap: () async {
-                      DateTime date = DateTime(1900);
                       FocusScope.of(context).requestFocus(new FocusNode());
-                      date = await showDatePicker(
+                      final DateTime date = await showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(1900),
                           lastDate: DateTime(2100));
-                      _payDateEditingController.text = date.toIso8601String();
+                      _payDateEditingController.text = DateFormat.yMMMd().format(date);
+                      selectedDate = date;
                     },
                   ))
                 ])
@@ -223,8 +225,7 @@ class _HomePageState extends State<HomePage> {
               new FlatButton(
                   child: const Text('Save'),
                   onPressed: () {
-                    addNewTodo(_textEditingController.text.toString(),
-                        _payDateEditingController.text.toString());
+                    addNewTodo(_textEditingController.text.toString(), selectedDate);
                     Navigator.pop(context);
                   })
             ],
@@ -242,6 +243,7 @@ class _HomePageState extends State<HomePage> {
             String subject = _todoList[index].subject;
             bool completed = _todoList[index].completed;
             String userId = _todoList[index].userId;
+            var paydateFormat = DateFormat.yMMMd().format(_todoList[index].payDate) + " - " + DateFormat.Hm().format(_todoList[index].payDate); // Apr 8, 2020
             return Dismissible(
               key: Key(todoId),
               background: Container(color: Colors.red),
@@ -252,6 +254,10 @@ class _HomePageState extends State<HomePage> {
                 title: Text(
                   subject,
                   style: TextStyle(fontSize: 20.0),
+                ),
+                subtitle: Text(
+                  paydateFormat,
+                  style: TextStyle(fontSize: 14.0),
                 ),
                 trailing: IconButton(
                     icon: (completed)
@@ -281,7 +287,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text('Flutter login demo'),
+          title: new Text('Personal finance'),
           actions: <Widget>[
             new FlatButton(
                 child: new Text('Logout',

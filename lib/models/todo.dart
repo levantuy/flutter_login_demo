@@ -5,7 +5,7 @@ class Todo {
   String subject;
   bool completed;
   String userId;
-  String payDate;
+  DateTime payDate;
 
   Todo(this.subject, this.userId, this.completed, this.payDate);
 
@@ -14,14 +14,14 @@ class Todo {
     userId = snapshot.value["userId"],
     subject = snapshot.value["subject"],
     completed = snapshot.value["completed"],
-    payDate = snapshot.value["payDate"];
+    payDate = new DateTime.fromMillisecondsSinceEpoch(snapshot.value["payDate"]);
 
   toJson() {
     return {
       "userId": userId,
       "subject": subject,
       "completed": completed,
-      "payDate": payDate,
+      "payDate": payDate.millisecondsSinceEpoch,
     };
   }
 }
