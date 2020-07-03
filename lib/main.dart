@@ -10,13 +10,13 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var a = PushMessagingExample();
     return new MaterialApp(
         title: 'Personal finance',
         debugShowCheckedModeBanner: false,
         theme: new ThemeData(
           primarySwatch: Colors.blue,
         ),
-        // home: new RootPage(auth: new Auth()));
-        home: PushMessagingExample());
+        home: new RootPage(auth: new Auth()));
   }
 }
