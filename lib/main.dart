@@ -5,46 +5,19 @@ import 'push_nofitications.dart';
 
 void main() {
   runApp(MaterialApp(
-    title: 'test',
-    home: TutorialHome(),
+    title: 'Personal finance',
+    home: MyStatefulWidget(),
   ));
 }
 
-class TutorialHome extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var a = new PushMessagingExample();
-    // Scaffold is a layout for the major Material Components.
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          tooltip: 'Navigation menu',
-          onPressed: null,
-        ),
-        title: Text('Personal finance'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            tooltip: 'Search',
-            onPressed: null,
-          ),
-        ],
-      ),
-      // body is the majority of the screen.
-      body: MyStatefulWidget(),
-    );
-  }
-}
-
 class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key key}) : super(key: key);
-
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  var a = new PushMessagingExample();
+
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -55,7 +28,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       style: optionStyle,
     ),
     Text(
-      'Index 2: Logout',
+      'Index 2: Help content',
       style: optionStyle,
     ),
   ];
@@ -83,8 +56,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             title: Text('Business'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.exit_to_app),
-            title: Text('Logout'),
+            icon: Icon(Icons.help),
+            title: Text('Help'),
           ),
         ],
         currentIndex: _selectedIndex,
