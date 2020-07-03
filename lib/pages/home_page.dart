@@ -303,20 +303,42 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            tooltip: 'Navigation menu',
-            onPressed: null,
+        appBar: AppBar(title: Text('Personal finance')),
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountName: Text("Tuy LV"),
+                accountEmail: Text("levantuy.it@gmail.com"),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor:
+                  Theme.of(context).platform == TargetPlatform.iOS
+                      ? Colors.blue
+                      : Colors.white,
+                  child: Text(
+                    "A",
+                    style: TextStyle(fontSize: 40.0),
+                  ),
+                ),
+              ),
+              ListTile(
+                title: Text("About me"),
+                trailing: Icon(Icons.account_box),
+                onTap: () {
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text("Logout"),
+                trailing: Icon(Icons.exit_to_app),
+                onTap: () => signOut(),
+              ),
+            ],
           ),
-          title: Text('Personal finance'),
-          actions: <Widget>[
-            new FlatButton(
-                child: new Text('Logout',
-                    style: new TextStyle(fontSize: 17.0, color: Colors.white)),
-                onPressed: signOut)
-          ],
-        ),
+        ),//this will just add the Navigation Drawer Icon
         body: showTodoList(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
