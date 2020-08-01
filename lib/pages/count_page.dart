@@ -29,9 +29,10 @@ class _CountPageState extends State<CountPage> {
   final _payDateEditingController = TextEditingController();
   final _money = TextEditingController();
   DateTime selectedDate = DateTime.now();
-  String dropdownValue = 'One';
+  String dropdownValue = 'Tay áo';
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
+  StreamSubscription<Event> _onCategoryAddedSubscription;
   StreamSubscription<Event> _onCategoryChangedSubscription;
 
   Query _todoQuery;
@@ -42,40 +43,35 @@ class _CountPageState extends State<CountPage> {
     super.initState();
 
     _todoList = new List();
+    _categoryList = new List();
+
     _todoQuery = _database
         .reference()
         .child("calculator")
         .orderByChild("userId")
         .equalTo(widget.userId);
-    _onTodoAddedSubscription = _todoQuery.onChildAdded.listen(onEntryAdded);
-    _onTodoChangedSubscription =  _todoQuery.onChildChanged.listen(onEntryChanged);
 
-    _categoryList = new List();
     _categoryQuery = _database
         .reference()
         .child("category")
         .orderByChild("userId")
         .equalTo(widget.userId);
-    _onCategoryChangedSubscription =  _categoryQuery.onChildChanged.listen(onCategoryEntryChanged);
+
+    _onTodoAddedSubscription = _todoQuery.onChildAdded.listen(onEntryAdded);
+    _onTodoChangedSubscription =
+        _todoQuery.onChildChanged.listen(onEntryChanged);
+
+    _onCategoryAddedSubscription =
+        _categoryQuery.onChildAdded.listen(onEntryAdded1);
+    _onCategoryChangedSubscription =
+        _categoryQuery.onChildChanged.listen(onEntryChanged1);
   }
 
   @override
   void dispose() {
     _onTodoAddedSubscription.cancel();
     _onTodoChangedSubscription.cancel();
-    _onCategoryChangedSubscription.cancel();
     super.dispose();
-  }
-
-  onCategoryEntryChanged(Event event) {
-    var oldEntry = _categoryList.singleWhere((entry) {
-      return entry.key == event.snapshot.key;
-    });
-
-    setState(() {
-      _categoryList[_categoryList.indexOf(oldEntry)] =
-          Category.fromSnapshot(event.snapshot);
-    });
   }
 
   onEntryChanged(Event event) {
@@ -92,6 +88,23 @@ class _CountPageState extends State<CountPage> {
   onEntryAdded(Event event) {
     setState(() {
       _todoList.add(Calculator.fromSnapshot(event.snapshot));
+    });
+  }
+
+  onEntryChanged1(Event event) {
+    var oldEntry = _categoryList.singleWhere((entry) {
+      return entry.key == event.snapshot.key;
+    });
+
+    setState(() {
+      _categoryList[_categoryList.indexOf(oldEntry)] =
+          Category.fromSnapshot(event.snapshot);
+    });
+  }
+
+  onEntryAdded1(Event event) {
+    setState(() {
+      _categoryList.add(Category.fromSnapshot(event.snapshot));
     });
   }
 
@@ -133,7 +146,7 @@ class _CountPageState extends State<CountPage> {
   showAddTodoDialog(BuildContext context) async {
     _payDateEditingController.clear();
     _money.clear();
-    print('_categoryList: $_todoList');
+    print('OPEN DIALOG ${_categoryList[0].name}');
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -176,10 +189,11 @@ class _CountPageState extends State<CountPage> {
                     onChanged: (String newValue) {
                       dropdownValue = newValue;
                     },
-                    items: <String>['One', 'Two', 'Free', 'Four'].map((String value) {
+                    items: _categoryList
+                        .map<DropdownMenuItem<String>>((Category value) {
                       return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
+                        value: value.name,
+                        child: Text(value.name),
                       );
                     }).toList(),
                   ))
@@ -213,7 +227,8 @@ class _CountPageState extends State<CountPage> {
                   child: const Text('Cộng'),
                   onPressed: () {
                     print(dropdownValue);
-                    addNewTodo(selectedDate, int.parse(_money.text.toString()), dropdownValue);
+                    addNewTodo(selectedDate, int.parse(_money.text.toString()),
+                        dropdownValue);
                     Navigator.pop(context);
                   })
             ],
