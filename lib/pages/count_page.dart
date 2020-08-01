@@ -1,10 +1,10 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_login_demo/models/calculator.dart';
+import 'package:flutter_login_demo/models/category.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_login_demo/models/todo.dart';
 import 'dart:async';
 
 class CountPage extends StatefulWidget {
@@ -21,6 +21,7 @@ class CountPage extends StatefulWidget {
 
 class _CountPageState extends State<CountPage> {
   List<Calculator> _todoList;
+  List<Category> _categoryList;
 
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -29,18 +30,17 @@ class _CountPageState extends State<CountPage> {
   final _payDateEditingController = TextEditingController();
   final _money = TextEditingController();
   DateTime selectedDate = DateTime.now();
+  String dropdownValue = 'One';
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
+  StreamSubscription<Event> _onCategoryChangedSubscription;
 
   Query _todoQuery;
-
-  //bool _isEmailVerified = false;
+  Query _categoryQuery;
 
   @override
   void initState() {
     super.initState();
-
-    //_checkEmailVerification();
 
     _todoList = new List();
     _todoQuery = _database
@@ -49,15 +49,34 @@ class _CountPageState extends State<CountPage> {
         .orderByChild("userId")
         .equalTo(widget.userId);
     _onTodoAddedSubscription = _todoQuery.onChildAdded.listen(onEntryAdded);
-    _onTodoChangedSubscription =
-        _todoQuery.onChildChanged.listen(onEntryChanged);
+    _onTodoChangedSubscription =  _todoQuery.onChildChanged.listen(onEntryChanged);
+
+    _categoryList = new List();
+    _categoryQuery = _database
+        .reference()
+        .child("category")
+        .orderByChild("userId")
+        .equalTo(widget.userId);
+    _onCategoryChangedSubscription =  _categoryQuery.onChildChanged.listen(onCategoryEntryChanged);
   }
 
   @override
   void dispose() {
     _onTodoAddedSubscription.cancel();
     _onTodoChangedSubscription.cancel();
+    _onCategoryChangedSubscription.cancel();
     super.dispose();
+  }
+
+  onCategoryEntryChanged(Event event) {
+    var oldEntry = _categoryList.singleWhere((entry) {
+      return entry.key == event.snapshot.key;
+    });
+
+    setState(() {
+      _categoryList[_categoryList.indexOf(oldEntry)] =
+          Category.fromSnapshot(event.snapshot);
+    });
   }
 
   onEntryChanged(Event event) {
@@ -86,10 +105,11 @@ class _CountPageState extends State<CountPage> {
     }
   }
 
-  addNewTodo(String todoItem, DateTime payDate, int money) {
-    if (todoItem.length > 0) {
+  addNewTodo(DateTime payDate, int money, String categoryId) {
+    if (categoryId.length > 0) {
       Calculator todo =
-          new Calculator(payDate, 'categoryId', money, widget.userId);
+          new Calculator(payDate, categoryId, money, widget.userId);
+      print(todo);
       _database.reference().child("calculator").push().set(todo.toJson());
     }
   }
@@ -112,9 +132,9 @@ class _CountPageState extends State<CountPage> {
   }
 
   showAddTodoDialog(BuildContext context) async {
-    _textEditingController.clear();
     _payDateEditingController.clear();
     _money.clear();
+    print('_categoryList: $_todoList');
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -131,7 +151,7 @@ class _CountPageState extends State<CountPage> {
                     maxLines: null,
                     controller: _payDateEditingController,
                     decoration: InputDecoration(
-                      labelText: "Pay date",
+                      labelText: "Ngày tính",
                       hintText: "Ex. 2020/06/01",
                     ),
                     onTap: () async {
@@ -149,15 +169,20 @@ class _CountPageState extends State<CountPage> {
                 ]),
                 Row(children: [
                   new Expanded(
-                      child: new TextField(
-                    maxLengthEnforced: false,
-                    maxLines: null,
-                    controller: _textEditingController,
-                    autofocus: true,
-                    decoration: new InputDecoration(
-                      labelText: 'Title',
-                      hintText: "Ex. buy rice",
-                    ),
+                      child: new DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    onChanged: (String newValue) {
+                      dropdownValue = newValue;
+                    },
+                    items: <String>['One', 'Two', 'Free', 'Four'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ))
                 ]),
                 Row(children: [
@@ -172,8 +197,8 @@ class _CountPageState extends State<CountPage> {
                     // Only numbers can be entered
                     controller: _money,
                     decoration: InputDecoration(
-                      labelText: "Money",
-                      hintText: "Ex. 6800",
+                      labelText: "Số lượng",
+                      hintText: "ví dự. 6800",
                     ),
                   ))
                 ])
@@ -181,15 +206,15 @@ class _CountPageState extends State<CountPage> {
             )),
             actions: <Widget>[
               new FlatButton(
-                  child: const Text('Subtract'),
+                  child: const Text('Trừ'),
                   onPressed: () {
                     Navigator.pop(context);
                   }),
               new FlatButton(
-                  child: const Text('Plus'),
+                  child: const Text('Cộng'),
                   onPressed: () {
-                    addNewTodo(_textEditingController.text.toString(),
-                        selectedDate, int.parse(_money.text.toString()));
+                    print(dropdownValue);
+                    addNewTodo(selectedDate, int.parse(_money.text.toString()), dropdownValue);
                     Navigator.pop(context);
                   })
             ],
