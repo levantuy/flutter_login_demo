@@ -8,7 +8,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
 
 class CalculatorPage extends StatefulWidget {
-  CalculatorPage({Key key, this.auth, this.userId, this.logoutCallback, this.id})
+  CalculatorPage(
+      {Key key, this.auth, this.userId, this.logoutCallback, this.id})
       : super(key: key);
 
   final BaseAuth auth;
@@ -47,6 +48,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
     setState(() {
       id = widget.id;
     });
+
+    if(id == null){
+      _money.text = '0';
+      _payDateEditingController.text = DateFormat.yMMMd().format(DateTime.now());
+    }
 
     _todoList = new List();
     _categoryList = new List();
@@ -127,11 +133,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
     if (categoryId.length > 0) {
       Calculator todo =
           new Calculator(payDate, categoryId, money, widget.userId);
-      if(id == null) {
+      if (id == null) {
         id = _database.reference().child("calculator").push().key;
         _database.reference().child("calculator").child(id).set(todo.toJson());
-      }
-      else _database.reference().child("calculator").child(id).set(todo.toJson());
+      } else
+        _database.reference().child("calculator").child(id).set(todo.toJson());
     }
   }
 
@@ -139,11 +145,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
     if (categoryId.length > 0) {
       Calculator todo =
           new Calculator(payDate, categoryId, money, widget.userId);
-      if(id == null) {
+      if (id == null) {
         id = _database.reference().child("calculator").push().key;
         _database.reference().child("calculator").child(id).set(todo.toJson());
-      }
-      else _database.reference().child("calculator").child(id).set(todo.toJson());
+      } else
+        _database.reference().child("calculator").child(id).set(todo.toJson());
     }
   }
 
@@ -176,14 +182,20 @@ class _CalculatorPageState extends State<CalculatorPage> {
         children: <Widget>[
           Row(children: [
             new Expanded(
-                child: new FlatButton(
-                    child: Icon(Icons.remove),
-                    onPressed: () {
-                      _money.text =
-                          (int.parse(_money.text.toString()) - 1).toString();
-                      subtract(selectedDate, int.parse(_money.text.toString()),
-                          dropdownValue);
-                    }))
+                child: ButtonTheme(
+                    height: 50.0,
+                    child: new RaisedButton(
+                        elevation: 5.0,
+                        shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                        color: Colors.redAccent,
+                        child: Icon(Icons.remove),
+                        onPressed: () {
+                          _money.text = (int.parse(_money.text.toString()) - 1)
+                              .toString();
+                          subtract(selectedDate,
+                              int.parse(_money.text.toString()), dropdownValue);
+                        })))
           ]),
           Row(children: [
             new Expanded(
@@ -195,6 +207,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 labelText: "Ngày tính",
                 hintText: "Ex. 2020/06/01",
               ),
+              style: TextStyle(
+                  fontSize: 20.0, height: 2.0, color: Colors.black),
               onTap: () async {
                 FocusScope.of(context).requestFocus(new FocusNode());
                 final DateTime date = await showDatePicker(
@@ -215,6 +229,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
               icon: Icon(Icons.arrow_downward),
               iconSize: 24,
               elevation: 16,
+              style: TextStyle(
+                  fontSize: 20.0, height: 2.0, color: Colors.black),
               onChanged: (String newValue) {
                 dropdownValue = newValue;
               },
@@ -230,30 +246,37 @@ class _CalculatorPageState extends State<CalculatorPage> {
           Row(children: [
             new Expanded(
                 child: new TextField(
-              maxLengthEnforced: false,
-              maxLines: null,
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
-              ],
-              // Only numbers can be entered
-              controller: _money,
-              decoration: InputDecoration(
-                labelText: "Số lượng",
-                hintText: "ví dự. 6800",
-              ),
-            ))
+                    maxLengthEnforced: false,
+                    maxLines: null,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    // Only numbers can be entered
+                    controller: _money,
+                    decoration: InputDecoration(
+                      hintText: "ví dụ: 69",
+                    ),
+                    style: TextStyle(
+                        fontSize: 20.0, height: 2.0, color: Colors.black)))
           ]),
           Row(children: [
             new Expanded(
-                child: new FlatButton(
-                    child: Icon(Icons.add),
-                    onPressed: () {
-                      _money.text =
-                          (int.parse(_money.text.toString()) + 1).toString();
-                      addNewTodo(selectedDate,
-                          int.parse(_money.text.toString()), dropdownValue);
-                    }))
+                child: ButtonTheme(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    height: 50.0,
+                    child: new RaisedButton(
+                        elevation: 5.0,
+                        shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                        color: Colors.blue,
+                        child: Icon(Icons.add),
+                        onPressed: () {
+                          _money.text = (int.parse(_money.text.toString()) + 1)
+                              .toString();
+                          addNewTodo(selectedDate,
+                              int.parse(_money.text.toString()), dropdownValue);
+                        })))
           ])
         ],
       ))),
