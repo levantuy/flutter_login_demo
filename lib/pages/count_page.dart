@@ -26,7 +26,6 @@ class _CountPageState extends State<CountPage> {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final _textEditingController = TextEditingController();
   final _payDateEditingController = TextEditingController();
   final _money = TextEditingController();
   DateTime selectedDate = DateTime.now();
