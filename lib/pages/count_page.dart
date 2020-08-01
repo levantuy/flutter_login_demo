@@ -119,11 +119,12 @@ class _CountPageState extends State<CountPage> {
   }
 
   updateTodo(Calculator todo) {
-    //Toggle completed
-    /* todo.completed = !todo.completed;
-    if (todo != null) {
-      _database.reference().child("calculator").child(todo.key).set(todo.toJson());
-    } */
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CalculatorPage(
+              userId: widget.userId, auth: widget.auth, calculator: todo)),
+    );
   }
 
   deleteTodo(String todoId, int index) {

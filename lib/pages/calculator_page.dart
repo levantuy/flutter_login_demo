@@ -48,9 +48,15 @@ class _CalculatorPageState extends State<CalculatorPage> {
       entity = widget.calculator;
     });
 
-    if(entity == null){
+    if (entity == null) {
       _money.text = '0';
-      _payDateEditingController.text = DateFormat.yMMMd().format(DateTime.now());
+      _payDateEditingController.text =
+          DateFormat.yMMMd().format(DateTime.now());
+    } else {
+      dropdownValue = entity.categoryId;
+      _money.text = entity.count.toString();
+      _payDateEditingController.text =
+          DateFormat.yMMMd().format(entity.calDate);
     }
 
     _todoList = new List();
