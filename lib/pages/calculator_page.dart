@@ -9,13 +9,12 @@ import 'dart:async';
 
 class CalculatorPage extends StatefulWidget {
   CalculatorPage(
-      {Key key, this.auth, this.userId, this.logoutCallback, this.id})
+      {Key key, this.auth, this.userId, this.calculator})
       : super(key: key);
 
   final BaseAuth auth;
-  final VoidCallback logoutCallback;
   final String userId;
-  final String id;
+  final Calculator calculator;
 
   @override
   State<StatefulWidget> createState() => new _CalculatorPageState();
@@ -32,7 +31,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   final _money = TextEditingController();
   DateTime selectedDate = DateTime.now();
   String dropdownValue = 'Tay áo';
-  String id = '';
+  Calculator entity;
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
   StreamSubscription<Event> _onCategoryAddedSubscription;
@@ -46,10 +45,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
     super.initState();
 
     setState(() {
-      id = widget.id;
+      entity = widget.calculator;
     });
 
-    if(id == null){
+    if(entity == null){
       _money.text = '0';
       _payDateEditingController.text = DateFormat.yMMMd().format(DateTime.now());
     }
@@ -120,54 +119,23 @@ class _CalculatorPageState extends State<CalculatorPage> {
     });
   }
 
-  signOut() async {
-    try {
-      await widget.auth.signOut();
-      widget.logoutCallback();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  addNewTodo(DateTime payDate, int money, String categoryId) {
+  plusOrSubtract(DateTime payDate, int money, String categoryId) {
     if (categoryId.length > 0) {
       Calculator todo =
           new Calculator(payDate, categoryId, money, widget.userId);
-      if (id == null) {
-        id = _database.reference().child("calculator").push().key;
+      if (entity == null) {
+        entity = new Calculator(payDate, categoryId, money, widget.userId);
+        var id = _database.reference().child("calculator").push().key;
         _database.reference().child("calculator").child(id).set(todo.toJson());
+        _database
+            .reference()
+            .child("calculator")
+            .child(id)
+            .once()
+            .then((DataSnapshot snapshot) => {entity.key = snapshot.key});
       } else
-        _database.reference().child("calculator").child(id).set(todo.toJson());
+        _database.reference().child("calculator").child(entity.key).set(todo.toJson());
     }
-  }
-
-  subtract(DateTime payDate, int money, String categoryId) {
-    if (categoryId.length > 0) {
-      Calculator todo =
-          new Calculator(payDate, categoryId, money, widget.userId);
-      if (id == null) {
-        id = _database.reference().child("calculator").push().key;
-        _database.reference().child("calculator").child(id).set(todo.toJson());
-      } else
-        _database.reference().child("calculator").child(id).set(todo.toJson());
-    }
-  }
-
-  updateTodo(Calculator todo) {
-    //Toggle completed
-    /* todo.completed = !todo.completed;
-    if (todo != null) {
-      _database.reference().child("calculator").child(todo.key).set(todo.toJson());
-    } */
-  }
-
-  deleteTodo(String todoId, int index) {
-    _database.reference().child("calculator").child(todoId).remove().then((_) {
-      print("Delete $todoId successful");
-      setState(() {
-        _todoList.removeAt(index);
-      });
-    });
   }
 
   @override
@@ -193,7 +161,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                         onPressed: () {
                           _money.text = (int.parse(_money.text.toString()) - 1)
                               .toString();
-                          subtract(selectedDate,
+                          plusOrSubtract(selectedDate,
                               int.parse(_money.text.toString()), dropdownValue);
                         })))
           ]),
@@ -274,7 +242,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                         onPressed: () {
                           _money.text = (int.parse(_money.text.toString()) + 1)
                               .toString();
-                          addNewTodo(selectedDate,
+                          plusOrSubtract(selectedDate,
                               int.parse(_money.text.toString()), dropdownValue);
                         })))
           ])

@@ -234,8 +234,7 @@ class _CountPageState extends State<CountPage> {
                   builder: (context) => CalculatorPage(
                       userId: widget.userId,
                       auth: widget.auth,
-                      logoutCallback: widget.logoutCallback,
-                      id: null)),
+                      calculator: null)),
             );
           },
           tooltip: 'Add',
