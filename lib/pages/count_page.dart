@@ -230,9 +230,12 @@ class _CountPageState extends State<CountPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CalculatorPage(userId: widget.userId,
-                auth: widget.auth,
-                logoutCallback: widget.logoutCallback)),
+              MaterialPageRoute(
+                  builder: (context) => CalculatorPage(
+                      userId: widget.userId,
+                      auth: widget.auth,
+                      logoutCallback: widget.logoutCallback,
+                      id: null)),
             );
           },
           tooltip: 'Add',

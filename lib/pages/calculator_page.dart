@@ -8,12 +8,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
 
 class CalculatorPage extends StatefulWidget {
-  CalculatorPage({Key key, this.auth, this.userId, this.logoutCallback})
+  CalculatorPage({Key key, this.auth, this.userId, this.logoutCallback, this.id})
       : super(key: key);
 
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
+  final String id;
 
   @override
   State<StatefulWidget> createState() => new _CalculatorPageState();
@@ -30,6 +31,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   final _money = TextEditingController();
   DateTime selectedDate = DateTime.now();
   String dropdownValue = 'Tay áo';
+  String id = '';
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
   StreamSubscription<Event> _onCategoryAddedSubscription;
@@ -41,6 +43,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
   @override
   void initState() {
     super.initState();
+
+    setState(() {
+      id = widget.id;
+    });
 
     _todoList = new List();
     _categoryList = new List();
@@ -121,7 +127,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
     if (categoryId.length > 0) {
       Calculator todo =
           new Calculator(payDate, categoryId, money, widget.userId);
-      _database.reference().child("calculator").push().set(todo.toJson());
+      if(id == null) {
+        id = _database.reference().child("calculator").push().key;
+        _database.reference().child("calculator").child(id).set(todo.toJson());
+      }
+      else _database.reference().child("calculator").child(id).set(todo.toJson());
     }
   }
 
@@ -129,7 +139,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
     if (categoryId.length > 0) {
       Calculator todo =
           new Calculator(payDate, categoryId, money, widget.userId);
-      _database.reference().child("calculator").push().set(todo.toJson());
+      if(id == null) {
+        id = _database.reference().child("calculator").push().key;
+        _database.reference().child("calculator").child(id).set(todo.toJson());
+      }
+      else _database.reference().child("calculator").child(id).set(todo.toJson());
     }
   }
 
