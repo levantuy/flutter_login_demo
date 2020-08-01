@@ -7,7 +7,7 @@ class Category {
   String userId;
   DateTime modifiedDate;
 
-  Category(this.name, this.isActive, this.userId, this.modifiedDate);
+  Category(this.name, this.isActive, this.userId);
 
   Category.fromSnapshot(DataSnapshot snapshot) :
         key = snapshot.key,
@@ -21,7 +21,7 @@ class Category {
       "userId": userId,
       "name": name,
       "isActive": isActive,
-      "modifiedDate": modifiedDate.millisecondsSinceEpoch
+      "modifiedDate": DateTime.now().millisecondsSinceEpoch
     };
   }
 }

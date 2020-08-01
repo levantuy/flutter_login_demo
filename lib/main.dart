@@ -22,12 +22,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    RootPage(auth: new Auth(), pageType: 'HOME'),
-    RootPage(auth: new Auth(), pageType: 'COUNT'),
-    Text(
-      'Index 2: Help content',
-      style: optionStyle,
-    ),
+    RootPage(auth: new Auth(), pageType: PageType.HOME),
+    RootPage(auth: new Auth(), pageType: PageType.COUNT),
+    RootPage(auth: new Auth(), pageType: PageType.CATEGORY)
   ];
 
   void _onItemTapped(int index) {
@@ -53,9 +50,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             title: Text('Count'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.help),
-            title: Text('Help'),
-          ),
+            icon: Icon(Icons.category),
+            title: Text('Category'),
+          )
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],

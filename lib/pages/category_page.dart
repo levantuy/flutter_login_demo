@@ -1,10 +1,7 @@
-import 'package:flutter/services.dart';
-import 'package:flutter_login_demo/models/calculator.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_login_demo/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_login_demo/models/todo.dart';
 import 'dart:async';
 
 class CategoryPage extends StatefulWidget {
@@ -20,15 +17,12 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  List<Calculator> _todoList;
+  List<Category> _todoList;
 
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final _textEditingController = TextEditingController();
-  final _payDateEditingController = TextEditingController();
-  final _money = TextEditingController();
-  DateTime selectedDate = DateTime.now();
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
 
@@ -45,7 +39,7 @@ class _CategoryPageState extends State<CategoryPage> {
     _todoList = new List();
     _todoQuery = _database
         .reference()
-        .child("calculator")
+        .child("category")
         .orderByChild("userId")
         .equalTo(widget.userId);
     _onTodoAddedSubscription = _todoQuery.onChildAdded.listen(onEntryAdded);
@@ -67,13 +61,13 @@ class _CategoryPageState extends State<CategoryPage> {
 
     setState(() {
       _todoList[_todoList.indexOf(oldEntry)] =
-          Calculator.fromSnapshot(event.snapshot);
+          Category.fromSnapshot(event.snapshot);
     });
   }
 
   onEntryAdded(Event event) {
     setState(() {
-      _todoList.add(Calculator.fromSnapshot(event.snapshot));
+      _todoList.add(Category.fromSnapshot(event.snapshot));
     });
   }
 
@@ -86,24 +80,24 @@ class _CategoryPageState extends State<CategoryPage> {
     }
   }
 
-  addNewTodo(String todoItem, DateTime payDate, int money) {
+  addNewTodo(String todoItem) {
     if (todoItem.length > 0) {
-      Calculator todo =
-      new Calculator(payDate, 'categoryId', money, widget.userId);
-      _database.reference().child("calculator").push().set(todo.toJson());
+      Category todo =
+      new Category(todoItem, true, widget.userId);
+      _database.reference().child("category").push().set(todo.toJson());
     }
   }
 
-  updateTodo(Calculator todo) {
+  updateTodo(Category todo) {
     //Toggle completed
-    /* todo.completed = !todo.completed;
+    todo.isActive = !todo.isActive;
     if (todo != null) {
-      _database.reference().child("calculator").child(todo.key).set(todo.toJson());
-    } */
+      _database.reference().child("category").child(todo.key).set(todo.toJson());
+    }
   }
 
   deleteTodo(String todoId, int index) {
-    _database.reference().child("calculator").child(todoId).remove().then((_) {
+    _database.reference().child("category").child(todoId).remove().then((_) {
       print("Delete $todoId successful");
       setState(() {
         _todoList.removeAt(index);
@@ -113,8 +107,6 @@ class _CategoryPageState extends State<CategoryPage> {
 
   showAddTodoDialog(BuildContext context) async {
     _textEditingController.clear();
-    _payDateEditingController.clear();
-    _money.clear();
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -129,51 +121,11 @@ class _CategoryPageState extends State<CategoryPage> {
                           child: new TextField(
                             maxLengthEnforced: false,
                             maxLines: null,
-                            controller: _payDateEditingController,
-                            decoration: InputDecoration(
-                              labelText: "Pay date",
-                              hintText: "Ex. 2020/06/01",
-                            ),
-                            onTap: () async {
-                              FocusScope.of(context).requestFocus(new FocusNode());
-                              final DateTime date = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100));
-                              _payDateEditingController.text =
-                                  DateFormat.yMMMd().format(date);
-                              selectedDate = date;
-                            },
-                          ))
-                    ]),
-                    Row(children: [
-                      new Expanded(
-                          child: new TextField(
-                            maxLengthEnforced: false,
-                            maxLines: null,
                             controller: _textEditingController,
                             autofocus: true,
                             decoration: new InputDecoration(
                               labelText: 'Title',
-                              hintText: "Ex. buy rice",
-                            ),
-                          ))
-                    ]),
-                    Row(children: [
-                      new Expanded(
-                          child: new TextField(
-                            maxLengthEnforced: false,
-                            maxLines: null,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              WhitelistingTextInputFormatter.digitsOnly
-                            ],
-                            // Only numbers can be entered
-                            controller: _money,
-                            decoration: InputDecoration(
-                              labelText: "Money",
-                              hintText: "Ex. 6800",
+                              hintText: "Ex. Tay áo",
                             ),
                           ))
                     ])
@@ -188,8 +140,7 @@ class _CategoryPageState extends State<CategoryPage> {
               new FlatButton(
                   child: const Text('Plus'),
                   onPressed: () {
-                    addNewTodo(_textEditingController.text.toString(),
-                        selectedDate, int.parse(_money.text.toString()));
+                    addNewTodo(_textEditingController.text.toString());
                     Navigator.pop(context);
                   })
             ],
@@ -203,28 +154,21 @@ class _CategoryPageState extends State<CategoryPage> {
           shrinkWrap: true,
           itemCount: _todoList.length,
           itemBuilder: (BuildContext context, int index) {
-            String calculatorId = _todoList[index].key;
-            String categoryId = _todoList[index].categoryId;
-            int count = _todoList[index].count;
+            String categoryId = _todoList[index].key;
+            String name = _todoList[index].name;
+            bool isActive = _todoList[index].isActive;
             String userId = _todoList[index].userId;
-            var calDateFormat =
-                DateFormat.yMMMd().format(_todoList[index].calDate) +
-                    " - " +
-                    _todoList[index].count.toString(); // Apr 8, 2020 - 6800
+
             return Dismissible(
-              key: Key(calculatorId),
+              key: Key(categoryId),
               background: Container(color: Colors.red),
               onDismissed: (direction) async {
-                deleteTodo(calculatorId, index);
+                deleteTodo(categoryId, index);
               },
               child: ListTile(
                 title: Text(
-                  categoryId,
+                  name,
                   style: TextStyle(fontSize: 20.0),
-                ),
-                subtitle: Text(
-                  calDateFormat,
-                  style: TextStyle(fontSize: 14.0),
                 ),
                 trailing: IconButton(
                     icon: Icon(
