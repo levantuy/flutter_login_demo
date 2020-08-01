@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_login_demo/pages/count_page.dart';
 import 'package:flutter_login_demo/pages/login_signup_page.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
 import 'package:flutter_login_demo/pages/home_page.dart';
@@ -10,9 +11,10 @@ enum AuthStatus {
 }
 
 class RootPage extends StatefulWidget {
-  RootPage({this.auth});
+  RootPage({this.auth, this.pageType});
 
   final BaseAuth auth;
+  final String pageType;
 
   @override
   State<StatefulWidget> createState() => new _RootPageState();
@@ -76,14 +78,27 @@ class _RootPageState extends State<RootPage> {
         );
         break;
       case AuthStatus.LOGGED_IN:
-        if (_userId.length > 0 && _userId != null) {
-          return new HomePage(
-            userId: _userId,
-            auth: widget.auth,
-            logoutCallback: logoutCallback,
-          );
-        } else
-          return buildWaitingScreen();
+        switch (widget.pageType) {
+          case 'HOME':
+            if (_userId.length > 0 && _userId != null) {
+              return new HomePage(
+                userId: _userId,
+                auth: widget.auth,
+                logoutCallback: logoutCallback,
+              );
+            } else
+              return buildWaitingScreen();
+            break;
+          case 'COUNT':
+            return new CountPage(
+              userId: _userId,
+              auth: widget.auth,
+              logoutCallback: logoutCallback,
+            );
+            break;
+          default:
+            return buildWaitingScreen();
+        }
         break;
       default:
         return buildWaitingScreen();

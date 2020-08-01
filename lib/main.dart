@@ -22,11 +22,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
-    RootPage(auth: new Auth()),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    RootPage(auth: new Auth(), pageType: 'HOME'),
+    RootPage(auth: new Auth(), pageType: 'COUNT'),
     Text(
       'Index 2: Help content',
       style: optionStyle,
@@ -53,7 +50,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            title: Text('Business'),
+            title: Text('Count'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.help),
