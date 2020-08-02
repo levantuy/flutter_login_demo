@@ -150,12 +150,12 @@ class _CategoryPageState extends State<CategoryPage> {
             )),
             actions: <Widget>[
               new FlatButton(
-                  child: const Text('Subtract'),
+                  child: Icon(Icons.cancel),
                   onPressed: () {
                     Navigator.pop(context);
                   }),
               new FlatButton(
-                  child: const Text('Plus'),
+                  child: Icon(Icons.save),
                   onPressed: () {
                     addNewTodo(_textEditingController.text.toString(), int.parse(_priceEditingController.text.toString()));
                     Navigator.pop(context);
