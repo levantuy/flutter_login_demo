@@ -30,7 +30,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   final _payDateEditingController = TextEditingController();
   final _money = TextEditingController();
   DateTime selectedDate = DateTime.now();
-  String dropdownValue = 'Tay áo';
+  String dropdownValue;
   Calculator entity;
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
@@ -208,8 +208,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
               style: TextStyle(
                   fontSize: 20.0, height: 2.0, color: Colors.black),
               onChanged: (String newValue) {
-                dropdownValue = newValue;
-              },
+                setState(() {
+                  dropdownValue = newValue;
+                });
+              }, hint: Text('Chọn công đoạn'),
               items:
                   _categoryList.map<DropdownMenuItem<String>>((Category value) {
                 return DropdownMenuItem<String>(
