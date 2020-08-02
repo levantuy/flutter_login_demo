@@ -170,7 +170,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           _money.text = (int.parse(_money.text.toString()) - 1)
                               .toString();
                           plusOrSubtract(selectedDate,
-                              int.parse(_money.text.toString()), _categoryList.firstWhere((element) => element.key == dropdownValue));
+                              int.parse(_money.text.toString()), _categoryList.firstWhere((element) => element.name == dropdownValue));
                         })))
           ]),
           Row(children: [
