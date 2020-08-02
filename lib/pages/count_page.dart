@@ -167,7 +167,7 @@ class _CountPageState extends State<CountPage> {
                 ),
                 trailing: IconButton(
                     icon: Icon(
-                      Icons.done_outline,
+                      Icons.edit,
                       color: Colors.green,
                       size: 20.0,
                     ),

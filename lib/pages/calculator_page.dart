@@ -151,19 +151,19 @@ class _CalculatorPageState extends State<CalculatorPage> {
         title: Text('Đếm sản lượng'),
       ),
       body: Center(
-          child: new Card(
+          child: new Card(child: SingleChildScrollView(
               child: Column(
         children: <Widget>[
           Row(children: [
             new Expanded(
                 child: ButtonTheme(
-                    height: 50.0,
+                    height: 70.0,
                     child: new RaisedButton(
                         elevation: 5.0,
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0)),
                         color: Colors.redAccent,
-                        child: Icon(Icons.remove),
+                        child: Icon(Icons.remove, size: 70),
                         onPressed: () {
                           _money.text = (int.parse(_money.text.toString()) - 1)
                               .toString();
@@ -220,31 +220,32 @@ class _CalculatorPageState extends State<CalculatorPage> {
           Row(children: [
             new Expanded(
                 child: new TextField(
+                    textAlignVertical: TextAlignVertical.center,
+                    textAlign: TextAlign.center,
                     maxLengthEnforced: false,
                     maxLines: null,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly
                     ],
-                    // Only numbers can be entered
                     controller: _money,
                     decoration: InputDecoration(
-                      hintText: "ví dụ: 69",
+                      hintText: "ví dụ: 69"
                     ),
                     style: TextStyle(
-                        fontSize: 20.0, height: 2.0, color: Colors.black)))
+                        fontSize: 70.0, height: 2.0, color: Colors.black)))
           ]),
           Row(children: [
             new Expanded(
                 child: ButtonTheme(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    height: 50.0,
+                    height: 70.0,
                     child: new RaisedButton(
                         elevation: 5.0,
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0)),
                         color: Colors.blue,
-                        child: Icon(Icons.add),
+                        child: Icon(Icons.add, size: 70),
                         onPressed: () {
                           _money.text = (int.parse(_money.text.toString()) + 1)
                               .toString();
@@ -253,7 +254,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                         })))
           ])
         ],
-      ))),
+      )))),
     );
   }
 }
