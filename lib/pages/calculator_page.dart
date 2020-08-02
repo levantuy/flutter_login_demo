@@ -30,7 +30,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   final _payDateEditingController = TextEditingController();
   final _money = TextEditingController();
   DateTime selectedDate = DateTime.now();
-  String dropdownValue = 'Tay áo';
+  String dropdownValue = '-MDh17gQXHmrQ2EGmSlM';
   Calculator entity;
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
@@ -53,7 +53,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       _payDateEditingController.text =
           DateFormat.yMMMd().format(DateTime.now());
     } else {
-      dropdownValue = entity.categoryId;
+      dropdownValue = entity.category.key;
       _money.text = entity.count.toString();
       _payDateEditingController.text =
           DateFormat.yMMMd().format(entity.calDate);
@@ -125,12 +125,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
     });
   }
 
-  plusOrSubtract(DateTime payDate, int money, String categoryId) {
-    if (categoryId.length > 0) {
+  plusOrSubtract(DateTime payDate, int money, Category category) {
+    if (category.key.length > 0) {
       Calculator todo =
-          new Calculator(payDate, categoryId, money, widget.userId);
+          new Calculator(payDate, category, money, widget.userId);
+      print(category.name);
       if (entity == null) {
-        entity = new Calculator(payDate, categoryId, money, widget.userId);
+        entity = new Calculator(payDate, category, money, widget.userId);
         var id = _database.reference().child("calculator").push().key;
         _database.reference().child("calculator").child(id).set(todo.toJson());
         _database
@@ -168,7 +169,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           _money.text = (int.parse(_money.text.toString()) - 1)
                               .toString();
                           plusOrSubtract(selectedDate,
-                              int.parse(_money.text.toString()), dropdownValue);
+                              int.parse(_money.text.toString()), _categoryList.firstWhere((element) => element.key == dropdownValue));
                         })))
           ]),
           Row(children: [
@@ -211,7 +212,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
               items:
                   _categoryList.map<DropdownMenuItem<String>>((Category value) {
                 return DropdownMenuItem<String>(
-                  value: value.name,
+                  value: value.key,
                   child: Text(value.name),
                 );
               }).toList(),
@@ -250,7 +251,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           _money.text = (int.parse(_money.text.toString()) + 1)
                               .toString();
                           plusOrSubtract(selectedDate,
-                              int.parse(_money.text.toString()), dropdownValue);
+                              int.parse(_money.text.toString()), _categoryList.firstWhere((element) => element.key == dropdownValue));
                         })))
           ])
         ],

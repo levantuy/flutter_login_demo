@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_login_demo/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
@@ -23,6 +24,7 @@ class _CategoryPageState extends State<CategoryPage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final _textEditingController = TextEditingController();
+  final _priceEditingController = TextEditingController();
   StreamSubscription<Event> _onTodoAddedSubscription;
   StreamSubscription<Event> _onTodoChangedSubscription;
 
@@ -80,10 +82,9 @@ class _CategoryPageState extends State<CategoryPage> {
     }
   }
 
-  addNewTodo(String todoItem) {
+  addNewTodo(String todoItem, int price) {
     if (todoItem.length > 0) {
-      Category todo =
-      new Category(todoItem, true, widget.userId);
+      Category todo = new Category(todoItem, price, true, widget.userId);
       _database.reference().child("category").push().set(todo.toJson());
     }
   }
@@ -92,7 +93,11 @@ class _CategoryPageState extends State<CategoryPage> {
     //Toggle completed
     todo.isActive = !todo.isActive;
     if (todo != null) {
-      _database.reference().child("category").child(todo.key).set(todo.toJson());
+      _database
+          .reference()
+          .child("category")
+          .child(todo.key)
+          .set(todo.toJson());
     }
   }
 
@@ -113,24 +118,36 @@ class _CategoryPageState extends State<CategoryPage> {
           return AlertDialog(
             content: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Row(children: [
-                      new Expanded(
-                          child: new TextField(
-                            maxLengthEnforced: false,
-                            maxLines: null,
-                            controller: _textEditingController,
-                            autofocus: true,
-                            decoration: new InputDecoration(
-                              labelText: 'Title',
-                              hintText: "Ex. Tay áo",
-                            ),
-                          ))
-                    ])
-                  ],
-                )),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Row(children: [
+                  new Expanded(
+                      child: new TextField(
+                    maxLengthEnforced: false,
+                    maxLines: null,
+                    controller: _textEditingController,
+                    autofocus: true,
+                    decoration: new InputDecoration(
+                      labelText: 'Title',
+                      hintText: "Ex. Tay áo",
+                    ),
+                  ))
+                ]),
+                Row(children: [
+                  new Expanded(
+                      child: new TextField(
+                          maxLengthEnforced: false,
+                          maxLines: null,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly
+                          ],
+                          controller: _priceEditingController,
+                          decoration: InputDecoration(hintText: "ví dụ: 69", labelText: 'Đơn giá')))
+                ])
+              ],
+            )),
             actions: <Widget>[
               new FlatButton(
                   child: const Text('Subtract'),
@@ -140,7 +157,7 @@ class _CategoryPageState extends State<CategoryPage> {
               new FlatButton(
                   child: const Text('Plus'),
                   onPressed: () {
-                    addNewTodo(_textEditingController.text.toString());
+                    addNewTodo(_textEditingController.text.toString(), int.parse(_priceEditingController.text.toString()));
                     Navigator.pop(context);
                   })
             ],
@@ -156,6 +173,7 @@ class _CategoryPageState extends State<CategoryPage> {
           itemBuilder: (BuildContext context, int index) {
             String categoryId = _todoList[index].key;
             String name = _todoList[index].name;
+            String price = _todoList[index].price.toString();
             bool isActive = _todoList[index].isActive;
             String userId = _todoList[index].userId;
 
@@ -169,6 +187,10 @@ class _CategoryPageState extends State<CategoryPage> {
                 title: Text(
                   name,
                   style: TextStyle(fontSize: 20.0),
+                ),
+                subtitle: Text(
+                  price,
+                  style: TextStyle(fontSize: 14.0),
                 ),
                 trailing: IconButton(
                     icon: Icon(
@@ -185,10 +207,10 @@ class _CategoryPageState extends State<CategoryPage> {
     } else {
       return Center(
           child: Text(
-            "Welcome. Your list is empty",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 30.0),
-          ));
+        "Welcome. Your list is empty",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 30.0),
+      ));
     }
   }
 
@@ -204,9 +226,9 @@ class _CategoryPageState extends State<CategoryPage> {
                 accountEmail: Text("levantuy.it@gmail.com"),
                 currentAccountPicture: CircleAvatar(
                   backgroundColor:
-                  Theme.of(context).platform == TargetPlatform.iOS
-                      ? Colors.blue
-                      : Colors.white,
+                      Theme.of(context).platform == TargetPlatform.iOS
+                          ? Colors.blue
+                          : Colors.white,
                   child: Text(
                     "A",
                     style: TextStyle(fontSize: 40.0),

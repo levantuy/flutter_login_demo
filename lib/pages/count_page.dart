@@ -143,7 +143,7 @@ class _CountPageState extends State<CountPage> {
           itemCount: _todoList.length,
           itemBuilder: (BuildContext context, int index) {
             String calculatorId = _todoList[index].key;
-            String categoryId = _todoList[index].categoryId;
+            Category category = _todoList[index].category;
             int count = _todoList[index].count;
             String userId = _todoList[index].userId;
             var calDateFormat =
@@ -158,7 +158,7 @@ class _CountPageState extends State<CountPage> {
               },
               child: ListTile(
                 title: Text(
-                  categoryId,
+                  category.name,
                   style: TextStyle(fontSize: 20.0),
                 ),
                 subtitle: Text(
