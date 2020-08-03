@@ -131,7 +131,6 @@ class _CalculatorPageState extends State<CalculatorPage> {
           new Calculator(payDate, category, money, widget.userId);
       print(todo);
       if (entity == null) {
-        print(entity);
         entity = new Calculator(payDate, category, money, widget.userId);
         var id = _database.reference().child("calculator").push().key;
         _database.reference().child("calculator").child(id).set(todo.toJson());
