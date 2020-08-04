@@ -10,6 +10,8 @@ dependencies:
   firebase_auth: ^0.14.0+5
   firebase_database: ^3.0.7
   firebase_messaging: ^6.0.16
+  flutter_google_places: ^0.1.4+1
+  url_launcher: ^4.0.1
 
 dev_dependencies:
   flutter_test:

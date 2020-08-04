@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_login_demo/pages/about_page.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
@@ -264,10 +265,13 @@ class _HomePageState extends State<HomePage> {
                 title: Text("About me"),
                 trailing: Icon(Icons.account_box),
                 onTap: () {
-                  // Update the state of the app
-                  // ...
-                  // Then close the drawer
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AboutPage(
+                            userId: widget.userId,
+                            auth: widget.auth)),
+                  );
                 },
               ),
               ListTile(
