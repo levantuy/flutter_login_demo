@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_login_demo/common/avatar.dart';
 import 'package:flutter_login_demo/models/calculator.dart';
 import 'package:flutter_login_demo/models/category.dart';
@@ -95,6 +97,14 @@ class _AboutPageState extends State<AboutPage> {
   }
 
   Widget _contactDetails() {
+    if (contactList.length == 0)
+      return Center(
+          child: Text(
+        "Loading... ",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 30.0),
+      ));
+
     return ListView(
       children: <Widget>[
         new SizedBox(
@@ -189,7 +199,7 @@ class _AboutPageState extends State<AboutPage> {
 //        throw 'Could not launch $url';
       }
     } catch (e) {
-      print(e.toString());
+      print("My custom exception: " + e.toString());
     }
   }
 }
