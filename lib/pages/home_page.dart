@@ -219,11 +219,11 @@ class _HomePageState extends State<HomePage> {
                 trailing: IconButton(
                     icon: (completed)
                         ? Icon(
-                            Icons.done_outline,
+                            Icons.add,
                             color: Colors.green,
                             size: 20.0,
                           )
-                        : Icon(Icons.done, color: Colors.grey, size: 20.0),
+                        : Icon(Icons.remove, color: Colors.red, size: 20.0),
                     onPressed: () {
                       updateTodo(_todoList[index]);
                     }),
